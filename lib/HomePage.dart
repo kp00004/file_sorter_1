@@ -62,31 +62,6 @@ class _FileHomeState extends State<FileHome> {
             },
           ),
           Padding(padding: const EdgeInsets.all(16)),
-          // Expanded(
-          //   child: GridView.count(
-          //     crossAxisCount: 3,
-          //     shrinkWrap: true,
-          //     physics: ClampingScrollPhysics(),
-          //     crossAxisSpacing: 16,
-          //     mainAxisSpacing: 16,
-          //     children:
-          //       output.map((entry) {
-          //         return Container(
-          //           padding: EdgeInsets.all(16),
-          //           decoration: BoxDecoration(
-          //           color: Colors.deepPurple[50],
-          //           borderRadius: BorderRadius.circular(8),
-          //           ),
-          //           child: SingleChildScrollView(
-          //             child: Text(
-          //               entry,
-          //               style: TextStyle(fontSize: 12, color: Colors.black),
-          //             ),
-          //           ),
-          //         );
-          //       }).toList(),
-          //   ),
-          // ),
           Expanded(
             child: GridView.count(
               crossAxisCount: 3,
@@ -106,7 +81,7 @@ class _FileHomeState extends State<FileHome> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            getFileIcon(entry), //  your helper function
+                            getFileIcon(entry), //icon getter
                             size: 36,
                             color: Colors.deepPurple,
                           ),
@@ -146,6 +121,3 @@ IconData getFileIcon(String filename) {
   if (['.zip', '.rar', '.7z'].contains(ext)) return Icons.archive;
   return Icons.insert_drive_file;
 }
-
-
-//child: SingleChildScrollView(child: Text(output)),
