@@ -92,7 +92,7 @@ class _FileHomeState extends State<FileHome> {
               Text(
                 renameFolders,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.start,
+                //textAlign: TextAlign.start,
               ),
               SizedBox(height: 12),
               Expanded(
@@ -140,11 +140,12 @@ class _FileHomeState extends State<FileHome> {
               Text(
                 renameRecents,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.start,
+                //textAlign: TextAlign.start,
               ),
               SizedBox(height: 12),
-              Expanded(
+              Flexible(
                 child: ListView.builder(
+                  shrinkWrap: true,
                   itemCount: output.length,
                   itemBuilder: (context, index) {
                     String fileData = output[index];
