@@ -11,15 +11,21 @@ class FileHome extends StatefulWidget {
 class _FileHomeState extends State<FileHome> {
   //String output = "Loading file metadata...";
   List<String> output = ["Loading file metadata..."];
+  var renameFolders = "Folder";
+  var renameRecents = "Recent Files";
   final TextEditingController _controller = TextEditingController();
+  final List<Map<String, dynamic>> fileCategories = [
+    {'label': 'Videos', 'icon': Icons.movie, 'type': 'video'},
+    {'label': 'Images', 'icon': Icons.image, 'type': 'image'},
+    {'label': 'PDFs', 'icon': Icons.picture_as_pdf, 'type': 'pdf'},
+    {'label': 'Music', 'icon': Icons.music_note, 'type': 'audio'},
+    {'label': 'Archives', 'icon': Icons.archive, 'type': 'archive'},
+    {'label': 'Others', 'icon': Icons.insert_drive_file, 'type': 'other'},
+  ];
 
   void _loadData() async {
     bool granted = await requestPermissions();
     if (granted) {
-      // String data = await getFileMetadata();
-      // setState(() {
-      //   output = data;
-      // });
       String data = await getFileMetadata();
       setState(() {
         output =
@@ -62,6 +68,12 @@ class _FileHomeState extends State<FileHome> {
             },
           ),
           Padding(padding: const EdgeInsets.all(16)),
+          SizedBox(height: 12),
+          Text(
+            renameFolders,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 12),
           Expanded(
             child: GridView.count(
               crossAxisCount: 3,
@@ -70,38 +82,58 @@ class _FileHomeState extends State<FileHome> {
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
               children:
-                  output.map((entry) {
+                  fileCategories.map((item) {
                     return Container(
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: Colors.deepPurple[50],
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            getFileIcon(entry), //icon getter
-                            size: 36,
+                            item['icon'],
+                            size: 40,
                             color: Colors.deepPurple,
                           ),
-                          SizedBox(height: 8),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Text(
-                                entry.split('/').last, //  short filename
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black,
-                                ),
-                              ),
+                          SizedBox(height: 10),
+                          Text(
+                            item['label'],
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            item['type'], 
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 12,
                             ),
                           ),
                         ],
                       ),
                     );
                   }).toList(),
+            ),
+          ),
+          SizedBox(height: 12),
+          Text(
+            renameRecents,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 12),
+          Expanded(
+            child: ListView.builder(
+              itemCount: output.length,
+              itemBuilder: (context, index) {
+                String fileData = output[index];
+                return ListTile(
+                  leading: Icon(getFileIcon(fileData)),
+                  title: Text(fileData.split('/').last,),
+                  onTap: () {
+                    // Implement file opening functionality here
+                  },
+                );
+              },
             ),
           ),
         ],
