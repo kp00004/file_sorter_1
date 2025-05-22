@@ -38,7 +38,7 @@ class _FileHomeState extends State<FileHome> {
                 .where((e) => e.isNotEmpty)
                 .toList();
       });
-    name=output;
+      name = output;
     } else {
       setState(() {
         output = ["Permission denied."];
@@ -57,46 +57,50 @@ class _FileHomeState extends State<FileHome> {
     return Scaffold(
       //appBar: AppBar(title: Text("File Metadata Viewer")),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              SizedBox(height: 12),
-              SearchBar(
-                controller: _controller,
-                hintText: "Search files...",
-                onTap: () {
-                  // Implement search functionality here
-                  String query = _controller.text;
-                  setState(() {
-                    output =
-                        output.where((entry) => entry.contains(query)).toList();
-                  });
-                },
-                onChanged: (value) {
-                  // print(output);
-                  // print(name);
-                  setState(() {
-                    if (value.isEmpty) {
-                      output = name;
-                    } else {
-                      output = name
-                          .where((entry) => entry.contains(value))
-                          .toList();
-                    }
-                  });
-                }
-              ),
-              //Padding(padding: const EdgeInsets.all(16)),
-              SizedBox(height: 12),
-              Text(
-                renameFolders,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                //textAlign: TextAlign.start,
-              ),
-              SizedBox(height: 12),
-              Expanded(
-                child: GridView.count(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
+              children: [
+                SizedBox(height: 12),
+                SearchBar(
+                  controller: _controller,
+                  hintText: "Search files...",
+                  onTap: () {
+                    // Implement search functionality here
+                    String query = _controller.text;
+                    setState(() {
+                      output =
+                          output
+                              .where((entry) => entry.contains(query))
+                              .toList();
+                    });
+                  },
+                  onChanged: (value) {
+                    // print(output);
+                    // print(name);
+                    setState(() {
+                      if (value.isEmpty) {
+                        output = name;
+                      } else {
+                        output =
+                            name
+                                .where((entry) => entry.contains(value))
+                                .toList();
+                      }
+                    });
+                  },
+                ),
+                //Padding(padding: const EdgeInsets.all(16)),
+                SizedBox(height: 12),
+                Text(
+                  renameFolders,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  //textAlign: TextAlign.start,
+                ),
+                SizedBox(height: 12),
+
+                GridView.count(
                   crossAxisCount: 3,
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
@@ -124,7 +128,7 @@ class _FileHomeState extends State<FileHome> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                item['type'], 
+                                item['type'],
                                 style: TextStyle(
                                   color: Colors.grey[700],
                                   fontSize: 12,
@@ -135,31 +139,47 @@ class _FileHomeState extends State<FileHome> {
                         );
                       }).toList(),
                 ),
-              ),
-              //SizedBox(height: 12),
-              Text(
-                renameRecents,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                //textAlign: TextAlign.start,
-              ),
-              SizedBox(height: 12),
-              Flexible(
-                child: ListView.builder(
+
+                SizedBox(height: 12),
+                Text(
+                  renameRecents,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  //textAlign: TextAlign.start,
+                ),
+                SizedBox(height: 12),
+
+                ListView.builder(
                   shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
                   itemCount: output.length,
                   itemBuilder: (context, index) {
                     String fileData = output[index];
                     return ListTile(
                       leading: Icon(getFileIcon(fileData)),
-                      title: Text(fileData.split('/').last,),
+                      title: Text(fileData.split('/').last),
                       onTap: () {
                         // Implement file opening functionality here
                       },
+                      trailing: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () async {
+                          String filePath =
+                              output[index]; // assuming you're inside itemBuilder
+                          await addFileToTag('work', filePath);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Added ${filePath.split('/').last} to 'work' tag",
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
