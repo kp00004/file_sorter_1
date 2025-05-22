@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'perms.dart';
 import 'FileData.dart';
 import 'Tags.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
 import 'package:path/path.dart' as p;
 
 class FileHome extends StatefulWidget {
@@ -125,19 +127,20 @@ class _FileHomeState extends State<FileHome> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('#', 
-                              style: TextStyle(
-                                fontSize: 20, 
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                )
+                              AutoSizeText(
+                                '#',
+                                style: TextStyle(color: Colors.white),
+                                maxLines: 1,
+                                minFontSize: 8,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              Text(
+
+                              AutoSizeText(
                                 tag.toString().toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
+                                style: TextStyle(color: Colors.white),
+                                maxLines: 1,
+                                minFontSize: 8,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
