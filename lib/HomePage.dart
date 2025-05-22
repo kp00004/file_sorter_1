@@ -38,7 +38,7 @@ class _FileHomeState extends State<FileHome> {
                 .where((e) => e.isNotEmpty)
                 .toList();
       });
-    name=output;
+      name = output;
     } else {
       setState(() {
         output = ["Permission denied."];
@@ -71,7 +71,9 @@ class _FileHomeState extends State<FileHome> {
                     String query = _controller.text;
                     setState(() {
                       output =
-                          output.where((entry) => entry.contains(query)).toList();
+                          output
+                              .where((entry) => entry.contains(query))
+                              .toList();
                     });
                   },
                   onChanged: (value) {
@@ -81,12 +83,13 @@ class _FileHomeState extends State<FileHome> {
                       if (value.isEmpty) {
                         output = name;
                       } else {
-                        output = name
-                            .where((entry) => entry.contains(value))
-                            .toList();
+                        output =
+                            name
+                                .where((entry) => entry.contains(value))
+                                .toList();
                       }
                     });
-                  }
+                  },
                 ),
                 //Padding(padding: const EdgeInsets.all(16)),
                 SizedBox(height: 12),
@@ -96,47 +99,47 @@ class _FileHomeState extends State<FileHome> {
                   //textAlign: TextAlign.start,
                 ),
                 SizedBox(height: 12),
-                
-                  GridView.count(
-                    crossAxisCount: 3,
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    children:
-                        fileCategories.map((item) {
-                          return Container(
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.deepPurple[50],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  item['icon'],
-                                  size: 40,
-                                  color: Colors.deepPurple,
+
+                GridView.count(
+                  crossAxisCount: 3,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  children:
+                      fileCategories.map((item) {
+                        return Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.deepPurple[50],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                item['icon'],
+                                size: 40,
+                                color: Colors.deepPurple,
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                item['label'],
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                item['type'],
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 12,
                                 ),
-                                SizedBox(height: 10),
-                                Text(
-                                  item['label'],
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  item['type'], 
-                                  style: TextStyle(
-                                    color: Colors.grey[700],
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                ),
+
                 SizedBox(height: 12),
                 Text(
                   renameRecents,
@@ -144,23 +147,37 @@ class _FileHomeState extends State<FileHome> {
                   //textAlign: TextAlign.start,
                 ),
                 SizedBox(height: 12),
-                
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    itemCount: output.length,
-                    itemBuilder: (context, index) {
-                      String fileData = output[index];
-                      return ListTile(
-                        leading: Icon(getFileIcon(fileData)),
-                        title: Text(fileData.split('/').last,),
-                        onTap: () {
-                          // Implement file opening functionality here
+
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemCount: output.length,
+                  itemBuilder: (context, index) {
+                    String fileData = output[index];
+                    return ListTile(
+                      leading: Icon(getFileIcon(fileData)),
+                      title: Text(fileData.split('/').last),
+                      onTap: () {
+                        // Implement file opening functionality here
+                      },
+                      trailing: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () async {
+                          String filePath =
+                              output[index]; // assuming you're inside itemBuilder
+                          await addFileToTag('work', filePath);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Added ${filePath.split('/').last} to 'work' tag",
+                              ),
+                            ),
+                          );
                         },
-                      );
-                    },
-                  ),
-                
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
