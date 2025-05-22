@@ -57,109 +57,112 @@ class _FileHomeState extends State<FileHome> {
     return Scaffold(
       //appBar: AppBar(title: Text("File Metadata Viewer")),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              SizedBox(height: 12),
-              SearchBar(
-                controller: _controller,
-                hintText: "Search files...",
-                onTap: () {
-                  // Implement search functionality here
-                  String query = _controller.text;
-                  setState(() {
-                    output =
-                        output.where((entry) => entry.contains(query)).toList();
-                  });
-                },
-                onChanged: (value) {
-                  // print(output);
-                  // print(name);
-                  setState(() {
-                    if (value.isEmpty) {
-                      output = name;
-                    } else {
-                      output = name
-                          .where((entry) => entry.contains(value))
-                          .toList();
-                    }
-                  });
-                }
-              ),
-              //Padding(padding: const EdgeInsets.all(16)),
-              SizedBox(height: 12),
-              Text(
-                renameFolders,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                //textAlign: TextAlign.start,
-              ),
-              SizedBox(height: 12),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  children:
-                      fileCategories.map((item) {
-                        return Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.deepPurple[50],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                item['icon'],
-                                size: 40,
-                                color: Colors.deepPurple,
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                item['label'],
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                item['type'], 
-                                style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                ),
-              ),
-              //SizedBox(height: 12),
-              Text(
-                renameRecents,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                //textAlign: TextAlign.start,
-              ),
-              SizedBox(height: 12),
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: output.length,
-                  itemBuilder: (context, index) {
-                    String fileData = output[index];
-                    return ListTile(
-                      leading: Icon(getFileIcon(fileData)),
-                      title: Text(fileData.split('/').last,),
-                      onTap: () {
-                        // Implement file opening functionality here
-                      },
-                    );
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
+              children: [
+                SizedBox(height: 12),
+                SearchBar(
+                  controller: _controller,
+                  hintText: "Search files...",
+                  onTap: () {
+                    // Implement search functionality here
+                    String query = _controller.text;
+                    setState(() {
+                      output =
+                          output.where((entry) => entry.contains(query)).toList();
+                    });
                   },
+                  onChanged: (value) {
+                    // print(output);
+                    // print(name);
+                    setState(() {
+                      if (value.isEmpty) {
+                        output = name;
+                      } else {
+                        output = name
+                            .where((entry) => entry.contains(value))
+                            .toList();
+                      }
+                    });
+                  }
                 ),
-              ),
-            ],
+                //Padding(padding: const EdgeInsets.all(16)),
+                SizedBox(height: 12),
+                Text(
+                  renameFolders,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  //textAlign: TextAlign.start,
+                ),
+                SizedBox(height: 12),
+                
+                  GridView.count(
+                    crossAxisCount: 3,
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    children:
+                        fileCategories.map((item) {
+                          return Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.deepPurple[50],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  item['icon'],
+                                  size: 40,
+                                  color: Colors.deepPurple,
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  item['label'],
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  item['type'], 
+                                  style: TextStyle(
+                                    color: Colors.grey[700],
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                  ),
+                
+                SizedBox(height: 12),
+                Text(
+                  renameRecents,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  //textAlign: TextAlign.start,
+                ),
+                SizedBox(height: 12),
+                
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    itemCount: output.length,
+                    itemBuilder: (context, index) {
+                      String fileData = output[index];
+                      return ListTile(
+                        leading: Icon(getFileIcon(fileData)),
+                        title: Text(fileData.split('/').last,),
+                        onTap: () {
+                          // Implement file opening functionality here
+                        },
+                      );
+                    },
+                  ),
+                
+              ],
+            ),
           ),
         ),
       ),
