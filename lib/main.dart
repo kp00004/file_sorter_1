@@ -3,6 +3,7 @@ import 'Tags.dart';
 import 'perms.dart';
 import 'FileData.dart';
 import 'HomePage.dart';
+import 'LandingPage.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'File Metadata Viewer',
-      home: FileHome(),
+      home: PageofLand(),
     );
   }
 }
