@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'Perms.dart';
 
+var files=[];
 Future<String> getFileMetadata() async {
   final root = Directory('/storage/emulated/0');
   if (!await root.exists()) return "Root directory not found.";
@@ -21,6 +22,7 @@ Future<String> getFileMetadata() async {
             buffer.writeln('  Size: ${stat.size} bytes');
             buffer.writeln('  Modified: ${stat.modified}');
             buffer.writeln('---');
+            files=files+[entity.path];
           } catch (_) {
             // Ignore unreadable file
           }
