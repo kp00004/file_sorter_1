@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'perms.dart';
 import 'FileData.dart';
+import 'Tags.dart';
 import 'package:path/path.dart' as p;
 
 class FileHome extends StatefulWidget {
@@ -10,6 +11,7 @@ class FileHome extends StatefulWidget {
 
 class _FileHomeState extends State<FileHome> {
   //String output = "Loading file metadata...";
+  late final List<String> name;
   List<String> output = ["Loading file metadata..."];
   var renameFolders = "Folder";
   var renameRecents = "Recent Files";
@@ -27,6 +29,7 @@ class _FileHomeState extends State<FileHome> {
     bool granted = await requestPermissions();
     if (granted) {
       String data = await getFileMetadata();
+      print(files);
       setState(() {
         output =
             data
@@ -35,6 +38,7 @@ class _FileHomeState extends State<FileHome> {
                 .where((e) => e.isNotEmpty)
                 .toList();
       });
+    name=output;
     } else {
       setState(() {
         output = ["Permission denied."];
@@ -69,12 +73,26 @@ class _FileHomeState extends State<FileHome> {
                         output.where((entry) => entry.contains(query)).toList();
                   });
                 },
+                onChanged: (value) {
+                  // print(output);
+                  // print(name);
+                  setState(() {
+                    if (value.isEmpty) {
+                      output = name;
+                    } else {
+                      output = name
+                          .where((entry) => entry.contains(value))
+                          .toList();
+                    }
+                  });
+                }
               ),
               //Padding(padding: const EdgeInsets.all(16)),
               SizedBox(height: 12),
               Text(
                 renameFolders,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.start,
               ),
               SizedBox(height: 12),
               Expanded(
@@ -118,10 +136,11 @@ class _FileHomeState extends State<FileHome> {
                       }).toList(),
                 ),
               ),
-              SizedBox(height: 12),
+              //SizedBox(height: 12),
               Text(
                 renameRecents,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.start,
               ),
               SizedBox(height: 12),
               Expanded(
