@@ -13,6 +13,7 @@ class _FileHomeState extends State<FileHome> {
   //String output = "Loading file metadata...";
   late final List<String> name;
   List<String> output = ["Loading file metadata..."];
+  List<String> tags = [];
   var renameFolders = "Folder";
   var renameRecents = "Recent Files";
   final TextEditingController _controller = TextEditingController();
@@ -46,10 +47,17 @@ class _FileHomeState extends State<FileHome> {
     }
   }
 
+  void loadTags() {
+    setState(() {
+      tags = getAllTags();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _loadData(); // Safe: not async itself, just calls async function
+    loadTags();
   }
 
   @override
@@ -107,31 +115,28 @@ class _FileHomeState extends State<FileHome> {
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                   children:
-                      fileCategories.map((item) {
+                      tags.map((tag) {
                         return Container(
                           padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.deepPurple[50],
+                            color: const Color.fromARGB(255, 16, 51, 80),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Column(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                item['icon'],
-                                size: 40,
-                                color: Colors.deepPurple,
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                item['label'],
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                              Text('#', 
+                              style: TextStyle(
+                                fontSize: 20, 
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                )
                               ),
                               Text(
-                                item['type'],
+                                tag.toString().toUpperCase(),
                                 style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 12,
+                                  color: Colors.white,
+                                  fontSize: 20,
                                 ),
                               ),
                             ],
@@ -168,6 +173,7 @@ class _FileHomeState extends State<FileHome> {
                           await addFileToTag('work', filePath);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
+                              behavior: SnackBarBehavior.floating,
                               content: Text(
                                 "Added ${filePath.split('/').last} to 'work' tag",
                               ),
