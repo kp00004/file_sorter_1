@@ -5,14 +5,15 @@ import 'Tags.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'FoldersPage.dart';
 import 'package:path/path.dart' as p;
-import 'theme.dart';
 
 class FileHome extends StatefulWidget {
-  @override
-  _FileHomeState createState() => _FileHomeState();
-}
+  const FileHome({Key? key}) : super(key: key);
 
-class _FileHomeState extends State<FileHome> {
+  @override
+  FileHomeState createState() => FileHomeState();
+
+}
+class FileHomeState extends State<FileHome> {
   late final List<String> name;
   List<String> output = ["Loading file metadata..."];
   List<String> tags = [];
@@ -216,24 +217,24 @@ class _FileHomeState extends State<FileHome> {
                             }
                           });
                         },
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                           colorScheme.surfaceContainer,
                         ),
-                        hintStyle: MaterialStateProperty.all(
+                        hintStyle: WidgetStateProperty.all(
                           textTheme.bodyMedium?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        textStyle: MaterialStateProperty.all(
+                        textStyle: WidgetStateProperty.all(
                           textTheme.bodyMedium,
                         ),
-                        elevation: MaterialStateProperty.all(0),
-                        shape: MaterialStateProperty.all(
+                        elevation: WidgetStateProperty.all(0),
+                        shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        side: MaterialStateProperty.all(
+                        side: WidgetStateProperty.all(
                           BorderSide(color: colorScheme.outlineVariant),
                         ),
                       ),
@@ -315,7 +316,7 @@ class _FileHomeState extends State<FileHome> {
                     String fileData = output[index];
                     return ListTile(
                       leading: Icon(
-                        getFileIcon(fileData),
+                        getFileIcon(p.basename(fileData)),
                         color: colorScheme.tertiaryContainer,
                       ),
                       title: Text(
@@ -344,7 +345,7 @@ class _FileHomeState extends State<FileHome> {
                               SnackBar(
                                 behavior: SnackBarBehavior.floating,
                                 content: Text(
-                                  "Added ${filePath.split('/').last} to '$selectedTag' tag",
+                                  "Added ${p.basename(filePath)} to '$selectedTag' tag",
                                 ),
                               ),
                             );

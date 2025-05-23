@@ -13,8 +13,6 @@ class SelectedFileFolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Selected Folder: $folderName");
-    print("Files in Folder: $files");
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
@@ -41,13 +39,11 @@ class SelectedFileFolder extends StatelessWidget {
                   String fileData = files[index];
                   return ListTile(
                     leading: Icon(
-                      getFileIcon(fileData),
+                      getFileIcon(p.basename(fileData)),
                       color: colorScheme.tertiaryContainer,
                     ),
                     title: Text(fileData.split('/').last),
-                    onTap: () {
-                      // Implement file opening functionality here
-                    },
+                    onTap: () {},
                     trailing: Icon(
                       Icons.more_vert,
                       color: colorScheme.tertiaryContainer,

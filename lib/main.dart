@@ -13,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('tagFiles');
-  runApp(MyApp()); // Entry point of the app
+  runApp(MyApp()); 
 }
 
 class MyApp extends StatelessWidget {
