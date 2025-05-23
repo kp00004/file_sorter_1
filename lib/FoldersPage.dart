@@ -114,14 +114,14 @@ class _ViewFoldersState extends State<ViewFolders> {
                             Icon(
                               item['icon'],
                               size: 40,
-                              color: colorScheme.primary,
+                              color: colorScheme.tertiaryContainer,
                             ),
                             SizedBox(height: 10),
                             Text(
                               item['label'],
                               style: textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
+                                color: colorScheme.tertiaryContainer,
                               ),
                             ),
                             Text(

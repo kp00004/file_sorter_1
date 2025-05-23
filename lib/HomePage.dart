@@ -16,7 +16,7 @@ class _FileHomeState extends State<FileHome> {
   late final List<String> name;
   List<String> output = ["Loading file metadata..."];
   List<String> tags = [];
-  var renameFolders = "Folder";
+  var renameFolders = "Tags";
   var renameRecents = "Recent Files";
   final TextEditingController _controller = TextEditingController();
 
@@ -67,8 +67,8 @@ class _FileHomeState extends State<FileHome> {
                   ),
                 ),
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: 3,
+                  right: 3,
                   child: IconButton(
                     icon: Icon(Icons.close, color: colorScheme.onSurface),
                     onPressed: () {
@@ -302,7 +302,6 @@ class _FileHomeState extends State<FileHome> {
                     color: colorScheme.onSurface,
                   ),
                 ),
-                SizedBox(height: 12),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
@@ -312,7 +311,7 @@ class _FileHomeState extends State<FileHome> {
                     return ListTile(
                       leading: Icon(
                         getFileIcon(fileData),
-                        color: colorScheme.primary,
+                        color: colorScheme.tertiaryContainer,
                       ),
                       title: Text(
                         fileData.split('/').last,
@@ -322,7 +321,7 @@ class _FileHomeState extends State<FileHome> {
                       ),
                       onTap: () {},
                       trailing: IconButton(
-                        icon: Icon(Icons.add, color: colorScheme.primary),
+                        icon: Icon(Icons.add, color: colorScheme.tertiaryContainer),
                         onPressed: () async {
                           String filePath = output[index];
                           String? selectedTag = await _showHoverBox(

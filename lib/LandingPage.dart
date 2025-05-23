@@ -11,7 +11,7 @@ class PageofLand extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: Center(
         child: Container(
           width: 512,
@@ -71,7 +71,7 @@ class PageofLand extends StatelessWidget {
                 Positioned(
                 left: 0,
                 right: 0,
-                top: 80,
+                top: 100,
                 bottom: null,
                 child: Align(
                   alignment: Alignment.center,
@@ -79,7 +79,7 @@ class PageofLand extends StatelessWidget {
                   'Elif Retros Oolala',
                   textAlign: TextAlign.center,
                   style: textTheme.headlineMedium?.copyWith(
-                    color: colorScheme.primary,
+                    color: colorScheme.tertiaryContainer,
                     fontSize: 40,
                     fontWeight: FontWeight.w400,
                   ),
@@ -110,7 +110,7 @@ class PageofLand extends StatelessWidget {
                     'Start',
                     style: TextStyle(
                       fontSize: 24,
-                      color: colorScheme.onSurface,
+                      color: colorScheme.tertiaryContainer,
                     ),
                   ),
                 ),
