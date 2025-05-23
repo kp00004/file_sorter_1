@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-
 import 'HomePage.dart';
+import 'theme.dart';
 
-
-class PageofLand extends StatelessWidget{
+class PageofLand extends StatelessWidget {
   const PageofLand({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
-      backgroundColor: Colors.white,
-      body: Center( // Center the entire stack in the screen
+    return Scaffold(
+      backgroundColor: colorScheme.background,
+      body: Center(
         child: Container(
           width: 512,
           height: 1024,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Stack(
@@ -28,7 +29,7 @@ class PageofLand extends StatelessWidget{
                 child: Icon(
                   Icons.folder,
                   size: 520,
-                  color: Color.fromARGB(255, 166, 197, 222),
+                  color: colorScheme.secondaryContainer.withOpacity(0.4),
                 ),
               ),
               Positioned(
@@ -37,16 +38,16 @@ class PageofLand extends StatelessWidget{
                 child: Icon(
                   Icons.folder,
                   size: 520,
-                  color: Color.fromARGB(255, 87, 145, 192),
+                  color: colorScheme.secondaryContainer.withOpacity(0.6),
                 ),
               ),
               Positioned(
                 left: -60,
-                top:280,
+                top: 280,
                 child: Icon(
                   Icons.folder,
                   size: 520,
-                  color: Color.fromARGB(255, 41, 103, 154),
+                  color: colorScheme.secondary,
                 ),
               ),
               Positioned(
@@ -55,7 +56,7 @@ class PageofLand extends StatelessWidget{
                 child: Icon(
                   Icons.folder,
                   size: 520,
-                  color: Color.fromARGB(255, 16, 51, 80),
+                  color: colorScheme.primaryContainer,
                 ),
               ),
               Positioned(
@@ -64,25 +65,30 @@ class PageofLand extends StatelessWidget{
                 child: Icon(
                   Icons.folder,
                   size: 520,
-                  color: Color.fromARGB(255, 8, 37, 62),
+                  color: colorScheme.primary,
                 ),
               ),
-
-              Positioned(
-                left: 20,
-                top: 100,
-                child: Text(
-                  'FILE EXPLORER',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 8, 37, 62),
-                    fontSize: 48,
+                Positioned(
+                left: 0,
+                right: 0,
+                top: 80,
+                bottom: null,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                  'Elif Retros Oolala',
+                  textAlign: TextAlign.center,
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: colorScheme.primary,
+                    fontSize: 40,
                     fontWeight: FontWeight.w400,
                   ),
+                  ),
                 ),
-              ),
+                ),
               Positioned(
                 right: 10,
-                bottom:  80,
+                bottom: 80,
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -92,16 +98,19 @@ class PageofLand extends StatelessWidget{
                       ),
                     );
                   },
-                  
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 82, 122, 155),
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    textStyle: TextStyle(fontSize: 24, color: Colors.white),
+                    backgroundColor: colorScheme.primaryContainer,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    textStyle: textTheme.titleLarge?.copyWith(
+                      fontSize: 24,
+                      color: colorScheme.onPrimary,
+                    ),
                   ),
-                  child: Text('Start',
+                  child: Text(
+                    'Start',
                     style: TextStyle(
                       fontSize: 24,
-                      color: Colors.white,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -112,4 +121,4 @@ class PageofLand extends StatelessWidget{
       ),
     );
   }
-} 
+}
