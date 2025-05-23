@@ -7,7 +7,7 @@ import 'LandingPage.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path/path.dart' as p;
-import 'TaggedFileFolder.dart';
+import 'SelectedFolder.dart';
 
 
 class ViewFolders extends StatefulWidget {
@@ -109,7 +109,7 @@ class _ViewFoldersState extends State<ViewFolders> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TaggedFileFolder(
+                              builder: (context) => SelectedFileFolder(
                                 files: filteredFiles,
                               ),
                             ),

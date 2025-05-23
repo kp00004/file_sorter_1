@@ -3,11 +3,11 @@ import 'Tags.dart';
 import 'FoldersPage.dart';
 import 'FileData.dart';
 
-class TaggedFileFolder extends StatelessWidget {
+class SelectedFileFolder extends StatelessWidget {
 
   final List<String> files;
 
-  TaggedFileFolder({required this.files});
+  SelectedFileFolder({required this.files});
 
   @override
   Widget build(BuildContext context) {
