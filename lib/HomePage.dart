@@ -5,6 +5,7 @@ import 'Tags.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'FoldersPage.dart';
 import 'package:path/path.dart' as p;
+import 'theme.dart';
 
 class FileHome extends StatefulWidget {
   @override
@@ -12,26 +13,19 @@ class FileHome extends StatefulWidget {
 }
 
 class _FileHomeState extends State<FileHome> {
-  //String output = "Loading file metadata...";
   late final List<String> name;
   List<String> output = ["Loading file metadata..."];
   List<String> tags = [];
-  var renameFolders = "Folder";
+  var renameFolders = "Tags";
   var renameRecents = "Recent Files";
   final TextEditingController _controller = TextEditingController();
-  final List<Map<String, dynamic>> fileCategories = [
-    {'label': 'Videos', 'icon': Icons.movie, 'type': 'video'},
-    {'label': 'Images', 'icon': Icons.image, 'type': 'image'},
-    {'label': 'PDFs', 'icon': Icons.picture_as_pdf, 'type': 'pdf'},
-    {'label': 'Music', 'icon': Icons.music_note, 'type': 'audio'},
-    {'label': 'Archives', 'icon': Icons.archive, 'type': 'archive'},
-    {'label': 'Others', 'icon': Icons.insert_drive_file, 'type': 'other'},
-  ];
 
   Future<String?> _showHoverBox(BuildContext context, List<String> tags) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return showDialog<String>(
       context: context,
-      barrierDismissible: true, // Tap outside to close
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -41,7 +35,7 @@ class _FileHomeState extends State<FileHome> {
           child: Container(
             width: 300,
             height: 400,
-            color: Color.fromARGB(255, 16, 51, 80),
+            color: colorScheme.surfaceContainerHigh,
             padding: const EdgeInsets.all(16),
             child: Stack(
               children: [
@@ -51,38 +45,91 @@ class _FileHomeState extends State<FileHome> {
                     crossAxisCount: 3,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
-                    children:
-                        tags.map((tag) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.of(
-                                context,
-                              ).pop(tag); // Close the dialog
-                            },
-                            child: Card(
-                              color: Color.fromARGB(255, 83, 130, 169),
-                              child: Center(
-                                child: Text(
-                                  tag.toString().toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                    children: tags.map((tag) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop(tag);
+                        },
+                        child: Card(
+                          color: colorScheme.primaryContainer,
+                          child: Center(
+                            child: Text(
+                              tag.toString().toUpperCase(),
+                              style: textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onPrimaryContainer,
                               ),
                             ),
-                          );
-                        }).toList(),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
-                // Add a close button
                 Positioned(
-                  top: 8,
-                  right: 8,
+                  top: 3,
+                  right: 3,
                   child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.white),
+                    icon: Icon(Icons.close, color: colorScheme.onSurface),
                     onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                Positioned(
+                  bottom: 8,
+                  left: 8,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.add,
+                      color: colorScheme.primary,
+                      semanticLabel: "Add Tag",
+                    ),
+                    onPressed: () async {
+                      String? tagName = await showDialog<String>(
+                        context: context,
+                        builder: (context) {
+                          TextEditingController controller =
+                              TextEditingController();
+                          return AlertDialog(
+                            title: Text("Enter Tag Name"),
+                            content: TextField(
+                              controller: controller,
+                              decoration: InputDecoration(
+                                hintText: "e.g. work",
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text("Cancel"),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                              TextButton(
+                                child: Text("Add"),
+                                onPressed: () {
+                                  loadTags();
+                                  Navigator.of(context)
+                                      .pop(controller.text.trim());
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      setState(() {
+                        tags = getAllTags();
+                      });
+                      if (tagName != null && tagName.isNotEmpty) {
+                        await addFileToTag(
+                          tagName,
+                          '/storage/emulated/0/.database_uuid',
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("File added to tag '$tagName'"),
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
@@ -97,16 +144,16 @@ class _FileHomeState extends State<FileHome> {
   void _loadData() async {
     bool granted = await requestPermissions();
     if (granted) {
-      String data = await getFileMetadata();
-      setState(() {
-        output =
-            data
-                .split('---')
-                .map((e) => e.trim())
-                .where((e) => e.isNotEmpty)
-                .toList();
-      });
-      name = output;
+      getFileMetadata().then(((data) {
+        setState(() {
+          output = data
+              .split('---')
+              .map((e) => e.trim())
+              .where((e) => e.isNotEmpty)
+              .toList();
+          name = output;
+        });
+      }));
     } else {
       setState(() {
         output = ["Permission denied."];
@@ -123,14 +170,15 @@ class _FileHomeState extends State<FileHome> {
   @override
   void initState() {
     super.initState();
-    _loadData(); // Safe: not async itself, just calls async function
+    _loadData();
     loadTags();
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      //appBar: AppBar(title: Text("File Metadata Viewer")),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -138,99 +186,122 @@ class _FileHomeState extends State<FileHome> {
             child: Column(
               children: [
                 SizedBox(height: 12),
-                SearchBar(
-                  controller: _controller,
-                  hintText: "Search files...",
-                  onTap: () {
-                    // Implement search functionality here
-                    String query = _controller.text;
-                    setState(() {
-                      output =
-                          output
-                              .where((entry) => entry.contains(query))
-                              .toList();
-                    });
-                  },
-                  onChanged: (value) {
-                    // print(output);
-                    // print(name);
-                    setState(() {
-                      if (value.isEmpty) {
-                        output = name;
-                      } else {
-                        output =
-                            name
-                                .where((entry) => entry.contains(value))
+                Row(
+                  children: [
+                    Expanded(
+                      child: SearchBar(
+                        controller: _controller,
+                        hintText: "Search files...",
+                        onTap: () {
+                          String query = _controller.text;
+                          setState(() {
+                            output = output
+                                .where((entry) => entry.contains(query))
                                 .toList();
-                      }
-                    });
-                  },
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            if (value.isEmpty) {
+                              output = name;
+                            } else {
+                              output = name
+                                  .where((entry) => entry.contains(value))
+                                  .toList();
+                            }
+                          });
+                        },
+                        backgroundColor: MaterialStateProperty.all(
+                            colorScheme.surfaceContainer),
+                        hintStyle: MaterialStateProperty.all(
+                          textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        textStyle: MaterialStateProperty.all(
+                          textTheme.bodyMedium,
+                        ),
+                        elevation: MaterialStateProperty.all(0),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        side: MaterialStateProperty.all(
+                          BorderSide(
+                            color: colorScheme.outlineVariant,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                //Padding(padding: const EdgeInsets.all(16)),
                 SizedBox(height: 12),
                 Text(
                   renameFolders,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  //textAlign: TextAlign.start,
+                  style: textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
                 SizedBox(height: 12),
-
                 GridView.count(
                   crossAxisCount: 3,
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  children:
-                      tags.map((tag) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewFolders(tag: tag),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 16, 51, 80),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                AutoSizeText(
-                                  '#',
-                                  style: TextStyle(color: Colors.white),
-                                  maxLines: 1,
-                                  minFontSize: 8,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-
-                                AutoSizeText(
-                                  tag.toString().toUpperCase(),
-                                  style: TextStyle(color: Colors.white),
-                                  maxLines: 1,
-                                  minFontSize: 8,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
+                  children: tags.map((tag) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewFolders(tag: tag),
                           ),
                         );
-                      }).toList(),
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AutoSizeText(
+                              '#',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.onPrimaryContainer,
+                              ),
+                              maxLines: 1,
+                              minFontSize: 8,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            AutoSizeText(
+                              tag.toString().toUpperCase(),
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.onPrimaryContainer,
+                              ),
+                              maxLines: 1,
+                              minFontSize: 8,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
-
                 SizedBox(height: 12),
                 Text(
                   renameRecents,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  //textAlign: TextAlign.start,
+                  style: textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
-                SizedBox(height: 12),
-
                 ListView.builder(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
@@ -238,16 +309,21 @@ class _FileHomeState extends State<FileHome> {
                   itemBuilder: (context, index) {
                     String fileData = output[index];
                     return ListTile(
-                      leading: Icon(getFileIcon(fileData)),
-                      title: Text(fileData.split('/').last),
-                      onTap: () {
-                        // Implement file opening functionality here
-                      },
+                      leading: Icon(
+                        getFileIcon(fileData),
+                        color: colorScheme.tertiaryContainer,
+                      ),
+                      title: Text(
+                        fileData.split('/').last,
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      onTap: () {},
                       trailing: IconButton(
-                        icon: Icon(Icons.add),
+                        icon: Icon(Icons.add, color: colorScheme.tertiaryContainer),
                         onPressed: () async {
-                          String filePath =
-                              output[index]; // Assuming this is the file path
+                          String filePath = output[index];
                           String? selectedTag = await _showHoverBox(
                             context,
                             tags,
@@ -256,7 +332,6 @@ class _FileHomeState extends State<FileHome> {
                             return;
                           } else {
                             await addFileToTag(selectedTag, filePath);
-                            // ignore: use_build_context_synchronously
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 behavior: SnackBarBehavior.floating,
