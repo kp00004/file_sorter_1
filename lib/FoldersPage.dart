@@ -26,10 +26,10 @@ class _ViewFoldersState extends State<ViewFolders> {
   String renameRecents = "Recent Files";
 
   final List<Map<String, dynamic>> fileCategories = [
-    {'label': 'Videos', 'icon': Icons.movie, 'type': 'video'},
-    {'label': 'Images', 'icon': Icons.image, 'type': 'image'},
-    {'label': 'PDFs', 'icon': Icons.picture_as_pdf, 'type': 'pdf'},
-    {'label': 'Music', 'icon': Icons.music_note, 'type': 'audio'},
+    {'label': 'Videos', 'icon': Icons.movie, 'type': '.mp4'},
+    {'label': 'Images', 'icon': Icons.image, 'type': '.jpg'},
+    {'label': 'PDFs', 'icon': Icons.picture_as_pdf, 'type': '.pdf'},
+    {'label': 'Music', 'icon': Icons.music_note, 'type': '.mp3'},
     {'label': 'Archives', 'icon': Icons.archive, 'type': 'archive'},
     {'label': 'Others', 'icon': Icons.insert_drive_file, 'type': 'other'},
   ];
@@ -48,21 +48,24 @@ class _ViewFoldersState extends State<ViewFolders> {
 
   void _loadData() async {
     tag = widget.tag;
-    if (tag == null)
+    if (tag == null) {
       return;
-    else {
+    } else {
       String tog = tag!;
-      List<String> data = await getFilesForTag(tog);
+      print(tog);
+      List<String> data = getFilesForTag(tog);
+      print(data);
 
       name = data;
+      filteredFiles = data;
 
       // Filter only if tag is passed
-      if (widget.tag != null) {
-        filteredFiles =
-            data.where((file) => file.contains(widget.tag!)).toList();
-      } else {
-        filteredFiles = data;
-      }
+      // if (widget.tag != null) {
+      //   filteredFiles =
+      //       data.where((file) => file.contains(widget.tag!)).toList();
+      // } else {
+      //   filteredFiles = ['Loading Files Data...'];
+      // }
     }
 
     setState(() {});
@@ -106,11 +109,13 @@ class _ViewFoldersState extends State<ViewFolders> {
                               .where((entry) => entry.contains(query))
                               .toList();
                           });
+                          print("Filtered Files: $filteredFiles");
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => SelectedFileFolder(
                                 files: filteredFiles,
+                                folderName: item['label'],
                               ),
                             ),
                           );

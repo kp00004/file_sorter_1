@@ -86,6 +86,66 @@ class _FileHomeState extends State<FileHome> {
                     },
                   ),
                 ),
+                Positioned(
+                  bottom: 8,
+                  left: 8,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      semanticLabel: "Add Tag",
+                    ),
+                    onPressed: () async {
+                      // Show a dialog to enter a tag name
+                      String? tagName = await showDialog<String>(
+                        context: context,
+                        builder: (context) {
+                          TextEditingController controller =
+                              TextEditingController();
+                          return AlertDialog(
+                            title: Text("Enter Tag Name"),
+                            content: TextField(
+                              controller: controller,
+                              decoration: InputDecoration(
+                                hintText: "e.g. work",
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text("Cancel"),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                              TextButton(
+                                child: Text("Add"),
+                                onPressed: () {
+                                  loadTags();
+                                  Navigator.of(
+                                    context,
+                                  ).pop(controller.text.trim());
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      setState(() {
+                        tags = getAllTags();
+                      });
+                      if (tagName != null && tagName.isNotEmpty) {
+                        
+                        await addFileToTag(
+                          tagName,
+                          '/storage/emulated/0/.database_uuid',
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("File added to tag '$tagName'"),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -97,16 +157,25 @@ class _FileHomeState extends State<FileHome> {
   void _loadData() async {
     bool granted = await requestPermissions();
     if (granted) {
-      String data = await getFileMetadata();
-      setState(() {
-        output =
-            data
-                .split('---')
-                .map((e) => e.trim())
-                .where((e) => e.isNotEmpty)
-                .toList();
-      });
-      name = output;
+      getFileMetadata().then(((data){
+        setState(() {
+          output = data.split('---')
+              .map((e) => e.trim())
+              .where((e) => e.isNotEmpty)
+              .toList();
+              name = output;
+        });
+
+      }));
+      // setState(() {
+      //   output =
+      //       data
+      //           .split('---')
+      //           .map((e) => e.trim())
+      //           .where((e) => e.isNotEmpty)
+      //           .toList();
+      // });
+      // name = output;
     } else {
       setState(() {
         output = ["Permission denied."];
