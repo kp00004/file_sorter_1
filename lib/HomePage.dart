@@ -45,25 +45,26 @@ class _FileHomeState extends State<FileHome> {
                     crossAxisCount: 3,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
-                    children: tags.map((tag) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop(tag);
-                        },
-                        child: Card(
-                          color: colorScheme.primaryContainer,
-                          child: Center(
-                            child: Text(
-                              tag.toString().toUpperCase(),
-                              style: textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onPrimaryContainer,
+                    children:
+                        tags.map((tag) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop(tag);
+                            },
+                            child: Card(
+                              color: colorScheme.primaryContainer,
+                              child: Center(
+                                child: Text(
+                                  tag.toString().toUpperCase(),
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: colorScheme.onPrimaryContainer,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        }).toList(),
                   ),
                 ),
                 Positioned(
@@ -108,8 +109,9 @@ class _FileHomeState extends State<FileHome> {
                                 child: Text("Add"),
                                 onPressed: () {
                                   loadTags();
-                                  Navigator.of(context)
-                                      .pop(controller.text.trim());
+                                  Navigator.of(
+                                    context,
+                                  ).pop(controller.text.trim());
                                 },
                               ),
                             ],
@@ -146,11 +148,12 @@ class _FileHomeState extends State<FileHome> {
     if (granted) {
       getFileMetadata().then(((data) {
         setState(() {
-          output = data
-              .split('---')
-              .map((e) => e.trim())
-              .where((e) => e.isNotEmpty)
-              .toList();
+          output =
+              data
+                  .split('---')
+                  .map((e) => e.trim())
+                  .where((e) => e.isNotEmpty)
+                  .toList();
           name = output;
         });
       }));
@@ -195,9 +198,10 @@ class _FileHomeState extends State<FileHome> {
                         onTap: () {
                           String query = _controller.text;
                           setState(() {
-                            output = output
-                                .where((entry) => entry.contains(query))
-                                .toList();
+                            output =
+                                output
+                                    .where((entry) => entry.contains(query))
+                                    .toList();
                           });
                         },
                         onChanged: (value) {
@@ -205,14 +209,16 @@ class _FileHomeState extends State<FileHome> {
                             if (value.isEmpty) {
                               output = name;
                             } else {
-                              output = name
-                                  .where((entry) => entry.contains(value))
-                                  .toList();
+                              output =
+                                  name
+                                      .where((entry) => entry.contains(value))
+                                      .toList();
                             }
                           });
                         },
                         backgroundColor: MaterialStateProperty.all(
-                            colorScheme.surfaceContainer),
+                          colorScheme.surfaceContainer,
+                        ),
                         hintStyle: MaterialStateProperty.all(
                           textTheme.bodyMedium?.copyWith(
                             color: colorScheme.onSurfaceVariant,
@@ -228,9 +234,7 @@ class _FileHomeState extends State<FileHome> {
                           ),
                         ),
                         side: MaterialStateProperty.all(
-                          BorderSide(
-                            color: colorScheme.outlineVariant,
-                          ),
+                          BorderSide(color: colorScheme.outlineVariant),
                         ),
                       ),
                     ),
@@ -251,48 +255,49 @@ class _FileHomeState extends State<FileHome> {
                   physics: ClampingScrollPhysics(),
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  children: tags.map((tag) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ViewFolders(tag: tag),
+                  children:
+                      tags.map((tag) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewFolders(tag: tag),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: colorScheme.primaryContainer,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AutoSizeText(
+                                  '#',
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: colorScheme.onPrimaryContainer,
+                                  ),
+                                  maxLines: 1,
+                                  minFontSize: 8,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                AutoSizeText(
+                                  tag.toString().toUpperCase(),
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: colorScheme.onPrimaryContainer,
+                                  ),
+                                  maxLines: 1,
+                                  minFontSize: 8,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
                           ),
                         );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AutoSizeText(
-                              '#',
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onPrimaryContainer,
-                              ),
-                              maxLines: 1,
-                              minFontSize: 8,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            AutoSizeText(
-                              tag.toString().toUpperCase(),
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onPrimaryContainer,
-                              ),
-                              maxLines: 1,
-                              minFontSize: 8,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                      }).toList(),
                 ),
                 SizedBox(height: 12),
                 Text(
@@ -321,7 +326,10 @@ class _FileHomeState extends State<FileHome> {
                       ),
                       onTap: () {},
                       trailing: IconButton(
-                        icon: Icon(Icons.add, color: colorScheme.tertiaryContainer),
+                        icon: Icon(
+                          Icons.add,
+                          color: colorScheme.tertiaryContainer,
+                        ),
                         onPressed: () async {
                           String filePath = output[index];
                           String? selectedTag = await _showHoverBox(
@@ -343,6 +351,10 @@ class _FileHomeState extends State<FileHome> {
                           }
                         },
                       ),
+                      tileColor: colorScheme.surface,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     );
                   },
                 ),
@@ -358,11 +370,19 @@ class _FileHomeState extends State<FileHome> {
 IconData getFileIcon(String filename) {
   final ext = p.extension(filename).toLowerCase();
 
-  if (['.jpg', '.jpeg', '.png', '.gif'].contains(ext)) return Icons.image;
-  if (['.mp4', '.avi', '.mov'].contains(ext)) return Icons.movie;
-  if (['.mp3', '.wav', '.m4a'].contains(ext)) return Icons.music_note;
-  if (['.pdf'].contains(ext)) return Icons.picture_as_pdf;
-  if (['.txt', '.doc', '.docx'].contains(ext)) return Icons.description;
-  if (['.zip', '.rar', '.7z'].contains(ext)) return Icons.archive;
-  return Icons.insert_drive_file;
+  if (['.jpg', '.jpeg', '.png', '.gif'].contains(ext)) {
+    return Icons.image;
+  } else if (['.mp4', '.avi', '.mov'].contains(ext)) {
+    return Icons.movie;
+  } else if (['.mp3', '.wav', '.m4a'].contains(ext)) {
+    return Icons.music_note;
+  } else if (['.pdf'].contains(ext)) {
+    return Icons.picture_as_pdf;
+  } else if (['.txt', '.doc', '.docx'].contains(ext)) {
+    return Icons.description;
+  } else if (['.zip', '.rar', '.7z'].contains(ext)) {
+    return Icons.archive;
+  } else {
+    return Icons.insert_drive_file;
+  }
 }

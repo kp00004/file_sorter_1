@@ -14,8 +14,8 @@ class PageofLand extends StatelessWidget {
       backgroundColor: colorScheme.surface,
       body: Center(
         child: Container(
-          width: 512,
-          height: 1024,
+          width: MediaQuery.of(context).size.width, 
+          height: MediaQuery.of(context).size.height,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             color: colorScheme.surface,
@@ -81,6 +81,24 @@ class PageofLand extends StatelessWidget {
                   style: textTheme.headlineMedium?.copyWith(
                     color: colorScheme.tertiaryContainer,
                     fontSize: 40,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  ),
+                ),
+                ),
+                Positioned(
+                left: 0,
+                right: 0,
+                top: 160,
+                bottom: null,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                  'Made by ppl who know who Who is',
+                  textAlign: TextAlign.center,
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 22,
                     fontWeight: FontWeight.w400,
                   ),
                   ),
