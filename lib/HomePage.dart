@@ -3,7 +3,7 @@ import 'perms.dart';
 import 'FileData.dart';
 import 'Tags.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-
+import 'FoldersPage.dart';
 import 'package:path/path.dart' as p;
 
 class FileHome extends StatefulWidget {
@@ -44,46 +44,48 @@ class _FileHomeState extends State<FileHome> {
             color: Color.fromARGB(255, 16, 51, 80),
             padding: const EdgeInsets.all(16),
             child: Stack(
-              children: [ 
+              children: [
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: GridView.count(
-              crossAxisCount: 3,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              children:
-                  tags.map((tag) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop(tag); // Close the dialog
-                      },
-                      child: Card(
-                        color: Color.fromARGB(255, 83, 130, 169),
-                        child: Center(
-                          child: Text(
-                            tag.toString().toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    children:
+                        tags.map((tag) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pop(tag); // Close the dialog
+                            },
+                            child: Card(
+                              color: Color.fromARGB(255, 83, 130, 169),
+                              child: Center(
+                                child: Text(
+                                  tag.toString().toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-            ),
+                          );
+                        }).toList(),
+                  ),
                 ),
-            // Add a close button
-            Positioned(
-              top: 8,
-              right: 8,
-              child: IconButton(
-                icon: Icon(Icons.close, color: Colors.white),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-              ),
-            ),
+                // Add a close button
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: IconButton(
+                    icon: Icon(Icons.close, color: Colors.white),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -96,7 +98,6 @@ class _FileHomeState extends State<FileHome> {
     bool granted = await requestPermissions();
     if (granted) {
       String data = await getFileMetadata();
-      print(files);
       setState(() {
         output =
             data
@@ -182,31 +183,41 @@ class _FileHomeState extends State<FileHome> {
                   mainAxisSpacing: 16,
                   children:
                       tags.map((tag) {
-                        return Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 16, 51, 80),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AutoSizeText(
-                                '#',
-                                style: TextStyle(color: Colors.white),
-                                maxLines: 1,
-                                minFontSize: 8,
-                                overflow: TextOverflow.ellipsis,
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewFolders(tag: tag),
                               ),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 16, 51, 80),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AutoSizeText(
+                                  '#',
+                                  style: TextStyle(color: Colors.white),
+                                  maxLines: 1,
+                                  minFontSize: 8,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
 
-                              AutoSizeText(
-                                tag.toString().toUpperCase(),
-                                style: TextStyle(color: Colors.white),
-                                maxLines: 1,
-                                minFontSize: 8,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                                AutoSizeText(
+                                  tag.toString().toUpperCase(),
+                                  style: TextStyle(color: Colors.white),
+                                  maxLines: 1,
+                                  minFontSize: 8,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }).toList(),
@@ -237,7 +248,10 @@ class _FileHomeState extends State<FileHome> {
                         onPressed: () async {
                           String filePath =
                               output[index]; // Assuming this is the file path
-                          String? selectedTag = await _showHoverBox(context,tags,);
+                          String? selectedTag = await _showHoverBox(
+                            context,
+                            tags,
+                          );
                           if (selectedTag == null) {
                             return;
                           } else {
