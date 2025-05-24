@@ -15,7 +15,6 @@ Future<String> getFileMetadata() async {
           try {
             final stat = await entity.stat();
             while (entity.path.contains("WhatsApp")){
-              // Avoid WhatsApp folder
               return;
             }
             buffer.writeln('📄 ${entity.path}');
@@ -24,18 +23,16 @@ Future<String> getFileMetadata() async {
             buffer.writeln('---');
             files=files+[entity.path];
           } catch (_) {
-            // Ignore unreadable file
+    
           }
         } else if (entity is Directory) {
-          // Avoid restricted folders like Android/data
           if (entity.path.contains('/Android/data') || entity.path.contains('/Android/obb')) {
             continue;
           }
-          await scanDir(entity); // Recursively scan safe folders
+          await scanDir(entity); 
         }
       }
     } catch (_) {
-      // Ignore permission-denied directories
     }
   }
 

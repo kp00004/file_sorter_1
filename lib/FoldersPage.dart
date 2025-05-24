@@ -13,12 +13,12 @@ import 'theme.dart'; // <-- Import your theme
 class ViewFolders extends StatefulWidget {
   final String? tag;
 
-  ViewFolders({this.tag});
+  const ViewFolders({Key? key, this.tag}) : super(key: key);
   @override
-  _ViewFoldersState createState() => _ViewFoldersState();
+  ViewFoldersState createState() => ViewFoldersState();
 }
 
-class _ViewFoldersState extends State<ViewFolders> {
+class ViewFoldersState extends State<ViewFolders> {
   List<String> name = [];
   String? tag;
   List<String> filteredFiles = ["Loading Files Data..."];
@@ -69,7 +69,7 @@ class _ViewFoldersState extends State<ViewFolders> {
         ),
         backgroundColor: colorScheme.primaryContainer,
       ),
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(16),
