@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'FileManager.dart';
 import 'Tags.dart';
 import 'perms.dart';
 import 'FileData.dart';
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
 
       title: 'File Metadata Viewer',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: PageofLand(),
+      //home: PageofLand(),
+      home: FileExplorer(),
     );
   }
 }
