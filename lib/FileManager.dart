@@ -1,9 +1,19 @@
 import 'dart:io';
+import 'package:file_sorter_1/TagDialogBox.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'HomePage.dart';
 import 'Menu.dart';
-//import 'package:path/path_provider.dart';
+import 'Tags.dart';
+//import 'TagDialogBox.dart';
+
+List<String> tags = [];
+// void loadTags() {
+//   setState(() {
+//     tags = getAllTags();
+//   });
+// }
+
 
 
 class FileExplorer extends StatefulWidget {
@@ -21,8 +31,11 @@ class _FileExplorerState extends State<FileExplorer> {
   @override
   void initState() {
     super.initState();
-    Directory? dir = widget.directory??Directory('/storage/emulated/0');
+    Directory? dir = widget.directory ?? Directory('/storage/emulated/0');
     loadFiles(dir);
+    setState(() {
+      tags = getAllTags();
+    });
   }
 
   void loadFiles(Directory dir) {
@@ -62,9 +75,9 @@ class _FileExplorerState extends State<FileExplorer> {
                   ),
                 );
               } else if (value == 'Tags') {
-                FileHome(
-                  files: items.map((e) => e.path).toList(),
-                  folderName: currentDir!.path.split('/').last,
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FileHome()),
                 );
               }
             },
@@ -96,7 +109,7 @@ class _FileExplorerState extends State<FileExplorer> {
               ),
             )
                 : () => OpenFile.open(entity.path),
-            //onLongPress: ,
+            onLongPress: () async => await showTagDialogBox(context, tags, entity.path),
           );
         },
       ),
