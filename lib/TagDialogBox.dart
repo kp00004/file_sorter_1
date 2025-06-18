@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../Tags.dart';
 
-Future<String?> showTagDialogBox(BuildContext context, List<String> tags,String filepath) async {
+Future<String?> showTagDialogBox(BuildContext context, List<String> tags, String filepath) async {
   final colorScheme = Theme.of(context).colorScheme;
   final textTheme = Theme.of(context).textTheme;
 
   return await showDialog<String>(
     context: context,
     barrierDismissible: true,
-    builder: (BuildContext context) {
+    builder: (BuildContext dialogContext) {
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32),
@@ -33,7 +33,7 @@ Future<String?> showTagDialogBox(BuildContext context, List<String> tags,String 
                         return GestureDetector(
                           onTap: () async {
                             await addFileToTag(tag, filepath);
-                            Navigator.of(context).pop(tag);
+                            Navigator.of(dialogContext).pop(tag);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text("Added to '$tag'")),
                             );
@@ -60,7 +60,7 @@ Future<String?> showTagDialogBox(BuildContext context, List<String> tags,String 
                     child: IconButton(
                       icon: Icon(Icons.close, color: colorScheme.onSurface),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(dialogContext).pop();
                       },
                     ),
                   ),
@@ -68,16 +68,12 @@ Future<String?> showTagDialogBox(BuildContext context, List<String> tags,String 
                     bottom: 8,
                     left: 8,
                     child: IconButton(
-                      icon: Icon(
-                        Icons.add,
-                        color: colorScheme.primary,
-                        semanticLabel: "Add Tag",
-                      ),
+                      icon: Icon(Icons.add, color: colorScheme.primary),
                       onPressed: () async {
                         final TextEditingController controller = TextEditingController();
                         String? tagName = await showDialog<String>(
-                          context: context,
-                          builder: (context) {
+                          context: dialogContext,
+                          builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text("Enter Tag Name"),
                               content: TextField(
@@ -102,9 +98,11 @@ Future<String?> showTagDialogBox(BuildContext context, List<String> tags,String 
 
                         if (tagName != null && tagName.isNotEmpty) {
                           await addFileToTag(tagName, filepath);
-                          Navigator.of(context).pop(tagName);// return new tag to caller
+                          tags.add(tagName); // update local list
+                          setLocalState(() {}); // refresh UI
+                          Navigator.of(dialogContext).pop(tagName);
                           ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Added to '$tagName'")),
+                            SnackBar(content: Text("Added to '$tagName'")),
                           );
                         }
                       },
